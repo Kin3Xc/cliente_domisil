@@ -9,8 +9,8 @@ app.config(function($routeProvider){
 		})
 
 		.when('/registro',{
-			templateUrl: 'partials/registro.html'
-			// controller: 'RegistroCtrl'
+			templateUrl: 'partials/registro.html',
+			controller: 'RegistroCtrl'
 		});
 });
 
@@ -155,4 +155,21 @@ app.controller('cotizadorController', ['$scope', 'renderMap', '$http', function(
 	  	});
 	};
 
+}]);
+
+app.controller('RegistroCtrl',['$scope', '$http', function($scope, $http){
+	$scope.empresa = {};
+	$scope.registrarEmpresa = function(){
+			$http.post('http://192.168.0.26:3000/api/emp-domiciliarios', $scope.empresa)
+			.success(function(data) {
+					$scope.empresa = {}; // Borramos los datos del formulario
+					$scope.empresas = data;
+					$scope.respuesta = "El registro fue éxitoso!";
+					console.log('Se guardo esto: '+ $scope.empresas);
+				})
+			.error(function(data) {
+				$scope.respuesta = "Error en el registro!";
+				console.log('Error: ' + data);
+			});
+	};
 }]);

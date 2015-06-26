@@ -17,14 +17,14 @@
 	        <div class="form-group">
 	            <label for="nombreEmpresa" class="col-lg-2 control-label">Nombre empresa</label>
 	            <div class="col-lg-10">
-	                <input type="text" class="form-control" id="nombreEmpresa" placeholder="Nombre empresa">
+	                <input ng-model="empresa.nombreEmpresa" type="text" class="form-control" id="nombreEmpresa" placeholder="Nombre empresa">
 	            </div>
 	        </div>
 
 	        <div class="form-group">
 	            <label for="nitEmpresa" class="col-lg-2 control-label">NIT empresa</label>
 	            <div class="col-lg-10">
-	                <input type="text" class="form-control" id="nitEmpresa" placeholder="NIT de la empresa">
+	                <input ng-model="empresa.nitEmpresa" type="text" class="form-control" id="nitEmpresa" placeholder="NIT de la empresa">
 	                <span class="help-block">Si desea generar una factura de servicio por favor ingrese el NIT de su empresa.</span>
 	            </div>
 	        </div>
@@ -32,39 +32,40 @@
 	        <div class="form-group">
 	            <label for="tarifaKm" class="col-lg-2 control-label">Tarifa KM</label>
 	            <div class="col-lg-10">
-	                <input type="text" class="form-control" id="tarifaKm" placeholder="Tarifa por kilometro">
+	                <input ng-model="empresa.tarifaKm" type="text" class="form-control" id="tarifaKm" placeholder="Tarifa por kilometro">
 	            </div>
 	        </div>
 
 	        <div class="form-group">
 	            <label for="telefono" class="col-lg-2 control-label">Taeléfono</label>
 	            <div class="col-lg-10">
-	                <input type="text" class="form-control" id="telefono" placeholder="Teléfono">
+	                <input ng-model="empresa.telefono" type="text" class="form-control" id="telefono" placeholder="Teléfono">
 	            </div>
 	        </div>
 
 	        <div class="form-group">
 	            <label for="email" class="col-lg-2 control-label">Email</label>
 	            <div class="col-lg-10">
-	                <input type="email" class="form-control" id="email" placeholder="Correo eléctronico">
+	                <input ng-model="empresa.email" type="email" class="form-control" id="email" placeholder="Correo eléctronico">
 	            </div>
 	        </div>
 
 	        <div class="form-group">
 	            <label for="logoEmpresa" class="col-lg-2 control-label">Logo</label>
 	            <div class="col-lg-10">
-	                <input type="file" id="logoEmpresa" multiple="">
+	                <input ng-model="empresa.logoEmpresa" type="file" id="logoEmpresa" multiple="">
 	            </div>
 	        </div>
 
 	        <div class="form-group">
 	            <div class="col-lg-10 col-lg-offset-2">
 	                <button class="btn btn-default">Cancel</button>
-	                <button type="submit" class="btn btn-primary">Registrar</button>
+	                <button ng-click="registrarEmpresa()" type="submit" class="btn btn-primary">Registrar</button>
 	            </div>
 	        </div>
 	    </fieldset>
 	</form>
+	<div class="respuesta">{{respuesta}}</div>
 </div>
 
 
