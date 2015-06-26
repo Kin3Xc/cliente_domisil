@@ -10,11 +10,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.1/css/material.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.1/css/ripples.css" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 
     <link rel="stylesheet" href="css/main.css">
     
   </head>
-  <body>
+  <body id="body">
 	<!-- HTML INCLUDES -->
     <div ng-include="'partials/header.html'"></div>
     <div class="container" ng-view></div>
@@ -32,12 +33,17 @@
    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.1/js/material.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.1/js/ripples.js"></script>
-
+    
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
     <script src="js/app.js"></script>
+    
 
     <script>
         $(document).ready(function() {
             $.material.init();
+            $('#panel').animate({
+                'margin-left':'600px'
+            }, 1500);
         });
     </script>
 

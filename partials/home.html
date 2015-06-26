@@ -1,1 +1,91 @@
-<h1 class="animicion">esto es home</h1>
+<script>
+    $(document).ready(function() {
+        $('#panel').animate({
+            'opacity':'1'
+        }, 1500);
+         $('#domisil').animate({
+         	'margin-left':'50px',
+            'opacity':'1'
+        }, 1500);
+
+       $('#cotizar').click(function(){
+       	 $('#body').animate({
+        	'background-image':'none'
+          }, 1500);
+       });
+    });
+</script>
+
+
+<div class="row home" data-ng-controller="cotizadorController">
+	<div class="col-lg-4 col-md-4 col-sm-4">
+		<div class="panel panel-info" id="panel">
+		    <div class="panel-heading">
+		        <h3 class="panel-title">Cotizar Servicio</h3>
+		    </div>
+		    <div class="panel-body">
+		       <form class="form-horizontal">
+			       	<fieldset>
+			  <!--      		<legend>Ingrese los siguientes datos</legend> -->
+				        <div class="form-group">
+				            <label for="origen" class="col-lg-2 control-label">Origen</label>
+				            <div class="col-lg-10">
+				                <input type="text" class="form-control" id="origen" />
+				            </div>
+				        </div>
+
+			            <div class="form-group">
+				            <label for="destino" class="col-lg-2 control-label">Destino</label>
+				            <div class="col-lg-10">
+				                <input type="text" class="form-control" id="destino" />
+				            </div>
+				        </div>
+
+				        <div class="form-group">
+				            <div class="col-lg-10 col-lg-offset-2">
+				            	<button type="submit" id="cotizar" class="btn btn-info" ng-click="mostrarInfo()">Cotizar</button>
+				                <button type="reset" class="btn btn-default">Limpiar</button>
+				            </div>
+				        </div>
+			       	</fieldset>
+		       </form>
+		    </div>
+		</div>
+	</div>
+	<div class="col-lg-1 col-md-1 col-sm-1"></div>
+	<div class="col-lg-7 col-md-7 col-sm-7 mapa jumbotron animate-show" id='map_canvas' ng-show="ver">
+	</div>
+	<div class="col-lg-7 col-md-7 col-sm-7 domisil" id="domisil" ng-hide="ver">
+		<h2 class="titulo">Tus domicilios a un click</h2>
+		<h2 class="mdi-maps-directions-bus domicilio"></h2>
+	</div>
+
+	<div class="tabla animate-show" ng-show="ver">
+		<table class="table table-bordered">
+			<tr ng-repeat="empresa in empresas">
+				<td class="contenedor">
+					<div class="proveedor">
+						<img class="foto-proveedor" src="img/img-proveedores/foto.jpg" alt="Empresa" >
+					</div>
+
+					<div class="resumen">
+						<p>Empresa: {{empresa.nombreEmpresa}}</p>
+						<p>Tiempo entrega: 60 Minutos</p>
+						<p>Precio: <span class="label label-info">{{empresa.tarifa}}</span></p>
+						<button class="btn btn-success btn-raised">Pedir servicio</button>
+					</div>
+<!-- 
+					<div class="contacto">
+							<p> <span class="item">Descripción:</span>tenemos mas de 5 años trasladando los productos y servicios de nuestros clientes, nuestra calidad es nuestra mejor carta de presentación, revolucionamos la forma de entregar paquetes en la ciudad</p>
+					</div> -->
+
+					<!-- <div class="comprar">
+							
+					</div> -->
+				</td>
+			</tr>
+		</table>
+	</div>
+
+
+</div>
