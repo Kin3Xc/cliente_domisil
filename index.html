@@ -1,5 +1,5 @@
-<!doctype html>
-<html ng-app="domisilapp">
+<!DOCTYPE html>
+<html lang="es" ng-app="domisilapp">
   <head>
     <meta charset="utf-8">
     <title>Domisil</title>
@@ -14,8 +14,8 @@
 
     <link rel="stylesheet" href="css/main.css">
     
-  </head>
-  <body id="body">
+  </head> 
+  <body id="body" onbeforeunload="return recargar()">
 	<!-- HTML INCLUDES -->
     <div ng-include="'partials/header.html'"></div>
     <div class="container" ng-view></div>
@@ -34,17 +34,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.1/js/material.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-material-design/0.2.1/js/ripples.js"></script>
     
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
     <script src="js/app.js"></script>
     
 
     <script>
         $(document).ready(function() {
             $.material.init();
-            $('#panel').animate({
-                'margin-left':'600px'
-            }, 1500);
         });
+
+        function recargar() {
+            return "Si recerga esta página perderá sus datos";
+        }
     </script>
 
 </body>

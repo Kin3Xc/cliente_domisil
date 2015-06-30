@@ -1,6 +1,7 @@
 
 var app = angular.module('domisilapp', ['ngRoute', 'ngAnimate']);
 
+//Configuración de rutas de la aplicacion web
 app.config(function($routeProvider){
 	$routeProvider
 		.when('/', {
@@ -11,6 +12,16 @@ app.config(function($routeProvider){
 		.when('/registro',{
 			templateUrl: 'partials/registro.html',
 			controller: 'RegistroCtrl'
+		})
+
+		.when('/service',{
+			templateUrl: 'partials/service.html',
+			controller: 'ServiceCrtl'
+		})
+
+		.when('/resumen',{
+			templateUrl: 'partials/resumen.html',
+			controller: 'ResumenCrtl'
 		});
 });
 
@@ -19,135 +30,106 @@ app.controller('HomeCtrl', ['$scope', function($scope){
 	
 }]);
 
-// Agrego una factoria donde estaran los diferentes metodos
-// encargados de trabajar con el mapa de Google
-app.factory('renderMap', function(){
-	var service = {};
-	
-	var originLat; 
-	var originLng;
-	
-	var map;
-	var Origen;
-	var Destino;
-	var directionsDisplay;
-	var directionsService;
+//Servicio que es inyectado en varios controladores para
+//poder tener acceso a los datos en diferentes vistas
+app.factory("Compra", function() {
+  return {
+    servicio: {}
+  };
+});
 
-	var originMarker;
-	var originLatLon;
-	var destinyMarker;
-	var destinyLatLon;
+//Servicio utilizado para consumir el API de google maps
+app.factory('geolocation', function(){
+	service = {};
 
-	var originCoords;
-	var destinyCoords;
+	var originLatLon="";
+	var destinyLatLon="";
+	// var directionsService = null;
+	// var directionsDisplay = null;
 
-
-	// Metodo para inicializar el mapa con la pocision actual 
-	// // del usuario
-	service.initialize = function(position){
-		// var a = [position.coords.latitude, position.coords.longitude];
-		// var b = [originLat, originLng];
-
+	service.buscar = function(){
 		directionsService = new google.maps.DirectionsService();
 		directionsDisplay = new google.maps.DirectionsRenderer();
 
-		var location =  new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-		var mapOptions = {
-			zoom: 16,
-			center: location,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
+		var options = {
+		  componentRestrictions: {country: 'CO'}
 		};
 
-		map = new google.maps.Map(document.getElementById('map_canvas'),
-			mapOptions);	
-
-		directionsDisplay.setMap(map);
-
-		originMarker = new google.maps.Marker({
-			map: map,
-			// position: location,
-			// title: 'Ubicación'
-		});
-		// originLatLon = location;
-
-		Origen = new google.maps.places.Autocomplete((document.getElementById('origen')),{ country: ['co'] });
+		var Origen = new google.maps.places.Autocomplete((document.getElementById('origen')),options);
 		google.maps.event.addListener(Origen, 'place_changed', function() {
-			service.posicionOrigen();
+			var place = Origen.getPlace();
+			originLatLon = place.geometry.location;
+			console.log(originLatLon);
 		});
-		Destino = new google.maps.places.Autocomplete((document.getElementById('destino')),{ country: ['co'] });
+
+		var Destino = new google.maps.places.Autocomplete((document.getElementById('destino')),options);
 		google.maps.event.addListener(Destino, 'place_changed', function() {
-			service.posicionDestino();
+			var place = Destino.getPlace();
+			destinyLatLon = place.geometry.location;
+			console.log(destinyLatLon);
 		});
-	}
-
-	//Metodo para marcar la direccion de origen que ingresa el usuario
-	service.posicionOrigen = function(){
-		originMarker.setMap(null);
-		var place = Origen.getPlace();
-		originLatLon = place.geometry.location;
-		originMarker = new google.maps.Marker({
-			map: map,
-			title: place.name,
-			position: place.geometry.location
-		});
-		map.setCenter(place.geometry.location);
-	}
-	//Metodo para marlar la direccion de destino que el usuario ingresa
-	service.posicionDestino = function(){
-		if (destinyMarker) {destinyMarker.setMap(null)};
-		var place = Destino.getPlace();
-		destinyLatLon = place.geometry.location;
-		destinyMarker = new google.maps.Marker({
-			map: map,
-			title: place.name,
-			position: place.geometry.location
-		});
-		map.setCenter(place.geometry.location);
-	}
-
-	// Metodo que permite octener la posicion actual del usuario
-	service.geoposicion = function(f1, f2){
-		navigator.geolocation.getCurrentPosition(f1, f2,{maximumAge: 30000,timeout: 5000,enableHighAccuracy: true});
-		
-	}
-	service.geoloc = function(){}
-
-	//Metodo para marcar las direcciones de origen y destino y el recorrido
-	//ademas de calcular la distancia y el tiempo de recorrido aprx.
-	service.ruta = function(){
-		originMarker.setMap(null);
-		destinyMarker.setMap(null);
-		var request = {
-			origin:originLatLon,
-			destination:destinyLatLon,
-			travelMode: google.maps.TravelMode.DRIVING
-		};
-
-		directionsService.route(request, function(response, status) {
-			if (status == google.maps.DirectionsStatus.OK) {
-				directionsDisplay.setDirections(response);
-				var distancia = response.routes[0].legs[0].distance.value / 1000;
-				var tiempo =response.routes[0].legs[0].duration.text;
-				console.log(distancia);
-			}
-		});
+		return {origin:originLatLon, destination:destinyLatLon}
 	}
 	return service;
 });
 
+
 // Creo un controlador para manejar la parte de la cotización
 // del usuario
-app.controller('cotizadorController', ['$scope', 'renderMap', '$http', function($scope, renderMap, $http){
+app.controller('cotizadorController', ['$scope', '$http', 'Compra', '$location', 'geolocation', function($scope, $http, Compra, $location, geolocation){
 	$scope.ver = false;
-	 renderMap.geoposicion(renderMap.initialize, renderMap.geoloc);
-	 //renderMap.ruta;
+	geolocation.buscar();
+		
 	//Funcion para mostrar el mapa al hacer clic en Cotizar
-
 	$scope.mostrarInfo = function(){
-	  $scope.ver = true;
-	  renderMap.geoposicion(renderMap.initialize, renderMap.geoloc);
-	  renderMap.ruta();
+	  	$scope.ver = true;
+	  	var oirigin =null;
+	  	var destination = null;
 
+	  	ruta = geolocation.buscar();
+	  	console.log(ruta.origin);
+
+	  	if (ruta.origin == "") {
+	  		origin = $scope.origen + ' Bogota, Colombia';
+	  	}else{
+	  		origin = ruta.origin;
+	  	}
+
+	  	if (ruta.destination == "") {
+	  		destination = $scope.destino + ' Bogota, Colombia';
+	  	}else{
+	  		destination = ruta.destination;
+	  	}
+	  	console.log(origin);
+	  	console.log(destination);
+
+	  	var request = {
+	  		origin: origin,
+	  		destination: destination,
+	  		travelMode: google.maps.TravelMode.DRIVING,
+	  		provideRouteAlternatives:true
+	  	};
+
+		directionsService.route(request, function(response, status){
+			if (status == google.maps.DirectionsStatus.OK) {
+				directionsDisplay.setDirections(response);
+				$scope.distancia = response.routes[0].legs[0].distance.text;
+				console.log($scope.distancia);
+				// var a = Math.round($scope.distancia);
+			}else{
+				alert('No existen rutas entre ambos puntos');
+			}
+
+			setTimeout(function(){
+				$scope.$apply(function(){
+					$scope.distancia=$scope.distancia;
+				})
+			}, 100);
+		});
+
+
+
+		//Peticion get a la API para traer todas las epmresas y sus tarifas 
 	  $http.defaults.headers.common["X-Custom-Header"] = "Angular.js";
 	  $http.get('http://192.168.0.26:3000/api/emp-domiciliarios').
 	  	success(function(data, status, headers, config){
@@ -155,14 +137,29 @@ app.controller('cotizadorController', ['$scope', 'renderMap', '$http', function(
 	  	});
 	};
 
-}]);
+	//Funcion para pasar los datos del servicios seleccionado por
+	//el usuario a la siguiente vista donde realizará la validación
+	$scope.servicioSeleccionado = function (){
+		Compra.servicio.empresa = "TUSDOMICILIOS.COM";
+		Compra.servicio.valor = "CO$20.000";
+		Compra.servicio.origen = $scope.origen;
+		Compra.servicio.destino = $scope.destino;
+		$location.url("/service");
+	};
 
+
+}]);
+//Find controlador cotizacion
+
+
+//Controlador para registrar una nueva empresa al sistema
 app.controller('RegistroCtrl',['$scope', '$http', function($scope, $http){
 	$scope.empresa = {};
 	$scope.registrarEmpresa = function(){
+		console.log($scope.empresa);
 			$http.post('http://192.168.0.26:3000/api/emp-domiciliarios', $scope.empresa)
 			.success(function(data) {
-					$scope.empresa = {}; // Borramos los datos del formulario
+					//$scope.empresa = {}; // Borramos los datos del formulario
 					$scope.empresas = data;
 					$scope.respuesta = "El registro fue éxitoso!";
 					console.log('Se guardo esto: '+ $scope.empresas);
@@ -171,5 +168,48 @@ app.controller('RegistroCtrl',['$scope', '$http', function($scope, $http){
 				$scope.respuesta = "Error en el registro!";
 				console.log('Error: ' + data);
 			});
+	};
+}]);
+//Fin controller empresa
+
+//Controlador para gestionar toda la parte del servicios hasta el envio del mismo
+app.controller('ServiceCrtl', ['$scope', 'Compra', '$location', function($scope, Compra, $location){
+	$scope.resumen = "Resumen del servicio";
+	$scope.pago = "Tipo de pago";
+	$scope.empresa = Compra.servicio.empresa;
+	$scope.valor = Compra.servicio.valor;
+	$scope.origen = Compra.servicio.origen;
+	$scope.destino = Compra.servicio.destino;
+	console.log(Compra.servicio.destino);
+
+	$scope.resumenFinal = function (){
+		Compra.servicio.empresa = "TUSDOMICILIOS.COM";
+		Compra.servicio.valor = "CO$20.000";
+		Compra.servicio.origen = $scope.origen;
+		Compra.servicio.destino = $scope.destino;
+		$location.url("/resumen");
+	};
+}]);
+//Fin controller servicio
+
+//Controlador para mostrar el resumen final del servico
+//y enviar el servicio para que sea procesado por la 
+//empresa seleccionada
+app.controller('ResumenCrtl', ['$scope', 'Compra', function($scope, Compra){
+	$scope.titlePage = "Confirmación y envío del servicio";
+	$scope.tipo = "Envío de paquetes";
+	$scope.origen = Compra.servicio.origen;
+	$scope.destino = Compra.servicio.destino;
+	$scope.empresa = Compra.servicio.empresa;
+	$scope.valor = Compra.servicio.valor;
+	
+
+	$scope.print = function(div){
+		alert('Holaa');
+		var printContents = document.getElementById(div).innerHTML;
+	  	var popupWin = window.open('', '_blank', 'width=600,height=600');
+	  	popupWin.document.open()
+	  	popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="css/main.css" /></head><body onload="window.print()">' + printContents + '</html>');
+	  	popupWin.document.close();
 	};
 }]);

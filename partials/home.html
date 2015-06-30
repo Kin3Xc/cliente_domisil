@@ -1,5 +1,9 @@
 <script>
     $(document).ready(function() {
+    	$(document).ready(function() {
+            $.material.init();
+        });
+
         $('#panel').animate({
             'opacity':'1'
         }, 1500);
@@ -17,75 +21,63 @@
 </script>
 
 
-<div class="row home" data-ng-controller="cotizadorController">
-	<div class="col-lg-4 col-md-4 col-sm-4">
+<div class="row home" ng-controller="cotizadorController">
+	<div class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
 		<div class="panel panel-info" id="panel">
-		    <div class="panel-heading">
-		        <h3 class="panel-title">Cotizar Servicio</h3>
-		    </div>
+
+		        <h1 class="titulo">DOMISIL</h1>
+		        <h4 class="tagLine">Envíos inmediatos en Bogotá</h4>
+
 		    <div class="panel-body">
-		       <form class="form-horizontal">
+		       <form role="form" ng-submit="mostrarInfo()" class="form-horizontal formulario" >
 			       	<fieldset>
-			  <!--      		<legend>Ingrese los siguientes datos</legend> -->
 				        <div class="form-group">
 				            <label for="origen" class="col-lg-2 control-label">Origen</label>
 				            <div class="col-lg-10">
-				                <input type="text" class="form-control" id="origen" />
+				                <input ng-model="origen" type="text" class="form-control" id="origen" name="origen" autofocus required />
 				            </div>
 				        </div>
 
 			            <div class="form-group">
 				            <label for="destino" class="col-lg-2 control-label">Destino</label>
 				            <div class="col-lg-10">
-				                <input type="text" class="form-control" id="destino" />
+				                <input ng-model="destino" type="text" class="form-control" id="destino" name="destino" required />
 				            </div>
 				        </div>
 
 				        <div class="form-group">
 				            <div class="col-lg-10 col-lg-offset-2">
-				            	<button type="submit" id="cotizar" class="btn btn-info" ng-click="mostrarInfo()">Cotizar</button>
-				                <button type="reset" class="btn btn-default">Limpiar</button>
+				            	<button type="submit" id="cotizar" class="btn btn-info" >Cotizar</button>
 				            </div>
 				        </div>
+				        <div class="alert alert-dismissable alert-success" ng-show="ver">
+						    <button type="button" class="close" data-dismiss="alert">×</button>
+						    <strong>Distancia: {{distancia}} </strong> 
+						</div>
 			       	</fieldset>
 		       </form>
 		    </div>
 		</div>
 	</div>
-	<div class="col-lg-1 col-md-1 col-sm-1"></div>
-	<div class="col-lg-7 col-md-7 col-sm-7 mapa jumbotron animate-show" id='map_canvas' ng-show="ver">
+	<div class=" mapa animate-show" id='map_canvas'>
 	</div>
-	<div class="col-lg-7 col-md-7 col-sm-7 domisil" id="domisil" ng-hide="ver">
-		<h2 class="titulo">Tus domicilios a un click</h2>
-		<h2 class="mdi-maps-directions-bus domicilio"></h2>
+<!-- 	<div class=""></div> -->
+	<div class="animate-show col-lg-6 col-md-6 col-sm-6 col-xs-12 resultados" ng-show="ver">
+
+		<div class="panel panel-default">
+		    <div class="panel-heading">Resultados</div>
+		    <div class="panel-body contenedor">
+		        <div class="proveedor">
+					<img class="foto-proveedor" src="img/img-proveedores/foto.jpg" alt="Empresa" >
+				</div>
+				<div class="resumen">
+					<p><span class="item">Empresa:</span> {{empresa.nombreEmpresa}}</p>
+					<p><span class="item">Precio:</span> <span class="label label-info">{{empresa.tarifaKm * distancia | currency : 'CO$' : 0}}</span></p>
+				</div>
+				<div class="btnComprar">
+					<button ng-click="servicioSeleccionado()" class="btn btn-success btnServicio">Pedir servicio</button>
+				</div>
+		    </div>
+		</div>
 	</div>
-
-	<div class="tabla animate-show" ng-show="ver">
-		<table class="table table-bordered">
-			<tr ng-repeat="empresa in empresas">
-				<td class="contenedor">
-					<div class="proveedor">
-						<img class="foto-proveedor" src="img/img-proveedores/foto.jpg" alt="Empresa" >
-					</div>
-
-					<div class="resumen">
-						<p>Empresa: {{empresa.nombreEmpresa}}</p>
-						<p>Tiempo entrega: 60 Minutos</p>
-						<p>Precio: <span class="label label-info">{{empresa.tarifa}}</span></p>
-						<button class="btn btn-success btn-raised">Pedir servicio</button>
-					</div>
-<!-- 
-					<div class="contacto">
-							<p> <span class="item">Descripción:</span>tenemos mas de 5 años trasladando los productos y servicios de nuestros clientes, nuestra calidad es nuestra mejor carta de presentación, revolucionamos la forma de entregar paquetes en la ciudad</p>
-					</div> -->
-
-					<!-- <div class="comprar">
-							
-					</div> -->
-				</td>
-			</tr>
-		</table>
-	</div>
-
-
 </div>

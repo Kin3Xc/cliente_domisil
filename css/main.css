@@ -25,30 +25,35 @@ body{
 	border-radius: 10px;
 	margin-bottom:20px;
 	height: 260px;
+	display: none;
 }
-.tabla{
-	margin-top: 20px;
-	padding: 0;
-	color: #34495e;
+.resultados{
+	margin-top: 10px;
+	font-size: 0.8em;
 }
 .foto-proveedor{
-	width: 200px;
-	height: 150px;
+	width: 150px;
+	height: 90px;
 	border-radius: 10px;
+	margin-top: 12px;
+}
+.contenedor{
+	border: 1px #ecf0f1 dashed;
 }
 .contenedor div{
 	float: left;
-	margin-right: 20px;
-	font-size: 16px;
+	margin-right: 8px;
 }
 .resumen{
-	margin-top: 20px;
+	margin-top: 18px;
 }
-.contacto{
-	margin-top: 20px;
-}
+
 .btnComprar{
-	
+	margin-top: 30px;
+}
+.btnServicio{
+	margin: 0;
+	padding: 8px;
 }
 .foto-proveedor:hover{
 	opacity: 0.6;
@@ -63,6 +68,9 @@ body{
 	padding: 0;
 	margin: 0;
 	text-shadow: 1px 2px 1px #FFF;
+}
+.tagLine{
+	text-align: center;
 }
 .tituloForm{
 	margin-bottom: 40px;
@@ -88,13 +96,36 @@ body{
 	font-weight: bold;
 }
 
+#panel{
+	margin-top: 30px;
+	padding: 20px;
+	border-radius: 10px;
+	margin-right: 20px;
+}
+#origen{
+	padding-left: 10px;
+}
+#destino{
+	padding-left: 10px;
+}
+
 
 #panel, #domisil{
 	opacity: 0;
 }
+#service{
+	opacity: 0.3;
+}
 .formRegistro{
 	background-color: #FFF;
 	opacity: 0;
+}
+.service{
+	margin-top: 20px;
+}
+.login{
+	margin-left: 1px;
+	margin-right: 1px;
 }
 
 .animate-show.ng-hide-add, 
